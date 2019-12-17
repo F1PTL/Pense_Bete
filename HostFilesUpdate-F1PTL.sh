@@ -12,29 +12,35 @@
 # ===================================================== #
 # Version 1.1                                           #
 # 11/05/2018  Modification F1PTL pour des besoins perso #
-#                                                       #
+# ======================================================#
 # Version 1.2                                           #
 # 09/01/2019  Modification F1PTL pour le fichier        #
-# NXDN.csv avec NXDN.csv-F1PTL                          #
-#                                                       #
+# NXDN.csv avec NXDN.csv-F1PT                           #
+# ======================================================#
+# Version 1.3						#
+# 17/12/2019 Mise en place de la Variable		#
+# REP_HOME="/home/teambvc/ref"                          #
 #########################################################
 # Check that the network is UP and die if its not
 if [ "$(expr length `hostname -I | cut -d' ' -f1`x)" == "1" ]; then
 	exit 0
 fi
-APRSHOSTS=/home/teambvc/ref/APRSHosts.txt
-DCSHOSTS=/home/teambvc/ref/DCS_Hosts.txt
-DExtraHOSTS=/home/teambvc/ref/DExtra_Hosts.txt
-DMRIDFILE=/home/teambvc/ref/DMRIds.dat
-DMRHOSTS=/home/teambvc/ref/DMR_Hosts.txt
-DPlusHOSTS=/home/teambvc/ref/DPlus_Hosts.txt
-P25HOSTS=/home/teambvc/ref/P25Hosts.txt
-YSFHOSTS=/home/teambvc/ref/YSFHosts.txt
-FCSHOSTS=/home/teambvc/ref/FCSHosts.txt
-XLXHOSTS=/home/teambvc/ref/XLXHosts.txt
-NXDNIDFILE=/home/teambvc/ref/NXDN.csv
-NXDNHOSTS=/home/teambvc/ref/NXDNHosts.txt
-TGLISTBM=/home/teambvc/ref/TGList_BM.txt
+
+REP_HOME="/home/teambvc/ref"
+
+APRSHOSTS=${REP_HOME}/APRSHosts.txt
+DCSHOSTS=${REP_HOME}/DCS_Hosts.txt
+DExtraHOSTS=${REP_HOME}/DExtra_Hosts.txt
+DMRIDFILE=${REP_HOME}/DMRIds.dat
+DMRHOSTS=${REP_HOME}/DMR_Hosts.txt
+DPlusHOSTS=${REP_HOME}/DPlus_Hosts.txt
+P25HOSTS=${REP_HOME}/P25Hosts.txt
+YSFHOSTS=${REP_HOME}/YSFHosts.txt
+FCSHOSTS=${REP_HOME}/FCSHosts.txt
+XLXHOSTS=${REP_HOME}/XLXHosts.txt
+NXDNIDFILE=${REP_HOME}/NXDN.csv
+NXDNHOSTS=${REP_HOME}/NXDNHosts.txt
+TGLISTBM=${REP_HOME}/TGList_BM.txt
 
 # How many backups
 FILEBACKUP=1
@@ -117,7 +123,7 @@ if [ -f "/root/DMR_Hosts.txt" ]; then
 	cat /root/DMR_Hosts.txt >> ${DMRHOSTS}
 fi
 # Add custom DMRIDFILE
-cp ${DMRIDFILE} /home/teambvc/DMRIds.dat
+cp ${DMRIDFILE} /root/DMRIds.dat
 
 
 # Add custom YSFHosts FR
