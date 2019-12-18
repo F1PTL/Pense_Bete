@@ -1,0 +1,95 @@
+#===================================
+# Installation HBlink3 et HBmonitor3
+#===================================
+# sudo bash si possible sinon on utilise les sudo devant les commandes
+#===================================================================== 
+
+sudo wget https://bootstrap.pypa.io/get-pip.py
+sudo python3 get-pip.py
+sudo apt install python3-dev -y
+sudo apt install python3-twisted -y
+sudo apt install python3-wheel -y
+sudo apt install python-configparser -y
+sudo apt install python3 python3-pip libffi-dev libssl-dev -y
+
+cd /opt
+sudo git clone https://github.com/n0mjs710/hblink3.git
+sudo git clone https://github.com/n0mjs710/dmr_utils3.git
+sudo git clone https://github.com/sp2ong/HBmonitor.git
+
+# Installation Utils3
+#####################
+cd /opt/dmr_utils3
+sudo ./install.sh
+
+reboot
+
+# Installation HBlink3
+######################
+cd /opt/hblink3
+sudo pip3 install -r requirements.txt
+
+sudo cp hblink-SAMPLE.cfg hblink.cfg
+sudo cp rules_SAMPLE.py rules.py
+
+# Configuration du serveur HBlink3
+##################################
+sudo nano hblink.cfg # (Modifier la configuration du fichier)
+
+
+# Installation HBmonitor
+########################
+cd /opt
+git clone https://github.com/sp2ong/HBmonitor.git
+cd HBmonitor
+chmod +x install.sh
+./install.sh
+
+
+
+# Configuration HBmonitor
+#########################
+cp config-SAMPLE.py config.py
+sudo nano config.py # (Modifier la configuration du fichier)
+
+# Configuration service HBmonitor et HBlink3
+############################################
+cp utils/hbmon.service /lib/systemd/system/
+sudo systemctl enable hbmon
+sudo systemctl start hbmon
+sudo systemctl status hbmon
+
+cp utils/hbmon.service /lib/systemd/system/hblink3.service
+cd /lib/systemd/system
+sudo nano hblink3.service # (Modifier la configuration du fichier changer HBmonitor par hblink3)
+Exemple :
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+[Unit]
+Description=HBLink3 Service
+After=network-online.target syslog.target
+Wants=network-online.target
+
+[Service]
+StandardOutput=null
+WorkingDirectory=/opt/hblink3
+RestartSec=3
+ExecStart=/usr/bin/python3 /opt/hblink3/bridge.py
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+sudo systemctl enable hblink3
+sudo systemctl start hblink3
+sudo systemctl status hblink3
+
+reboot # (Vérification du demarrage de HBlink3 et HBmonitor)
+ps -edf| grep -i hb
+root       522     1  5 12:54 ?        00:00:03 /usr/bin/python3 /opt/HBmonitor/monitor.py
+root       523     1  4 12:54 ?        00:00:02 /usr/bin/python3 /opt/hblink3/bridge.py
+pi         598   585  0 12:55 pts/0    00:00:00 grep --color=auto -i hb
+
+
+
+
