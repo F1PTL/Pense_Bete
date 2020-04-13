@@ -1,0 +1,104 @@
+﻿USRP_Client OrangePI Zero et l'interface SpotNik Delta
+
+Etendre le fs /
+/etc/init.d/resize2fs start 
+reboot
+
+Vérifer avec la commande df -h la place disponible sous /
+
+Mettre en place le dvswitch server
+cp /etc/rc.local /etc/rc.local_spotnik
+
+Dans un premier temps on lance l'installation du DVSwitch Server.
+https://github.com/F1PTL/Documentations/blob/master/Installation%20DVSwitch%20Server%20V1.5%20sur%20RaspBerry%20Pi%203%20ou%204.pdf
+cd /opt
+git clone https://github.com/F1PTL/Gestion_Menu.git
+
+cd /opt/Gestion_Menu
+chmod 755 *.sh
+./Menu_V1.7.sh
+
+Installation md380-emu sur OrangePIZero
+apt-get update
+apt-get install md380-emu
+
+Mise en place de USRP_Client pour OrangePIZero
+cd /opt
+git clone https://github.com/F1PTL/USRP_Client_OrangePIZero.git
+cd /opt/USRP_Client_OrangePIZero
+chmod 755 *.py
+
+Modification du fichier pyUC.ini
+[DEFAULTS]
+myCall = F1PTL              ; You callsign
+subscriberID = 2080023      ; Your DMR/CCS7 ID
+repeaterID = 2080023        ; Your repeater ID
+ipAddress = 127.0.0.1       ; IP address or hostname of DVSwitch Server (AB)
+usrpTxPort = 41352          ; Port on which AB is listening
+usrpRxPort = 41351          ; Local port to listen for packets from AB
+.......
+
+Modification du fichier Analog_bridge.ini (mettre des ports USRP differents)
+[USRP]
+address = 127.0.0.1                     ; IP address of USRP partner (Allstar/Asterisk or another Analog_Bridge)
+txPort = 41351                          ; Transmit USRP frames on this port
+rxPort = 41352                          ; Listen for USRP frames on this port
+usrpAudio = AUDIO_USE_GAIN              ; Audio to ASL (AUDIO_UNITY, AUDIO_USE_AGC, AUDIO_USE_GAIN)
+usrpGain = 8                            ; Gain (in db) of the AGC filter
+tlvAudio = AUDIO_USE_GAIN               ; Audio from ASL (AUDIO_UNITY, AUDIO_USE_GAIN, AUDIO_BPF)
+tlvGain = 0.10                          ; Gain factor of audio from ASL (0.0-1.0)
+........
+
+Installation logiciel supplémentaire pour OrangePIZero
+apt-get install python3-tk -y
+apt-get install python3-pyaudio -y
+apt-get install portaudio19-dev -y
+apt-get install python3-pil.imagetk -y
+apt-get install alsa* -y
+apt-get install python-dev -y
+pip3 install --upgrade OPi.GPIO
+pip3 install beautifulsoup4
+pip3 install requests
+pip3 install wheel
+pip3 install pyA20
+
+Installation GPIO pour OrangePI
+git clone https://github.com/Jeremie-C/OrangePi.GPIO
+cd /opt/OrangePi.GPIO
+python3 setup.py install
+
+Mise en place du fichier origine /etc/rc.local
+cp /etc/rc.local_spotnik /etc/rc.local
+
+Mettre en commentaire le lancement du spotnik
+(pour l'instant pas de cohabitation entre svxlink et DVSwitch)
+# /etc/spotnik/restart
+
+
+reboot
+
+
+Vérification de la mise en place des services DVSwitch Serveur
+# ps -edf| grep -i md380-emu
+# ps -edf| grep -i mmdvm
+# ps -edf| grep -i analog
+
+Lancement de l'interface graphique sur OrangePIZero
+# vncserver
+
+Se positionner sur l'interface graphique du OrangePIZero
+Se positionner dans le repertoire 
+cd /opt/USRP_Client_OrangePIZero
+# python3 ./pyUC.py
+
+Lancement de l'interface USRP_Client. Selectionner le mode puis le Talk Group.
+Vous pouvez trafiquer avec votre Radio Analogique sur la frequence correspondante
+a votre configuration DRA818U  (Chez moi 432.975Mhz avec CTCSS 71.9)
+
+F1PTL Bruno
+
+
+
+
+
+
