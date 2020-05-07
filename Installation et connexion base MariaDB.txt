@@ -29,6 +29,11 @@ Connexion a la base
 http://192.168.0.XX/phpmyadmin
 
 
+Connexion a la base station-db 
+------------------------------
+sudo mysql -u root -p stations-db
+password : *****************
+
 
 Insertion base ID-DMR Monde.
 ----------------------------
