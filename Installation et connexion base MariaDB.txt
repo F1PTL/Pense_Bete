@@ -29,3 +29,12 @@ Connexion a la base
 http://192.168.0.XX/phpmyadmin
 
 
+
+Insertion base ID-DMR Monde.
+----------------------------
+LOAD DATA LOCAL INFILE '/home/pi/user_04052020.csv' INTO TABLE utilisateurs FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+Insertion base ID-NXDN Monde.
+-----------------------------
+LOAD DATA LOCAL INFILE '/home/pi/ref/NXDN.csv' INTO TABLE nxdn FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
