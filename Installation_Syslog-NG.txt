@@ -1,0 +1,22 @@
+Installation Syslog-NG
+
+sudo bash
+apt-get install syslog-ng
+nano /etc/default/syslog-ng
+
+Pour supprimer les messages s’affichant constamment dans la console il faut
+supprimer le signe # devant la ligne : CONSOLE_LOG_LEVEL=1
+
+Redemarrage du logiciel Syslog-NG
+/etc/init.d/syslog-ng restart
+
+Comme le deamon syslog-ng est installer et actif nous pouvons désinstaller le démon syslogd
+avec les commandes : 
+update-rc.d -f rsyslog remove
+dpkg -P rsyslog
+
+
+Configurer Syslog-NG : 
+nano /etc/syslog-ng/syslog-ng.conf
+
+il y a des exemples sur le net pour le fcihier de configuration.
