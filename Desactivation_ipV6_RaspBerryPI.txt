@@ -1,0 +1,48 @@
+Desactivation ipV6 RaspBerry PI
+-------------------------------
+
+Taper la commande sur votre RaspBerry PI :
+sudo ip a s | grep inet6
+
+On trouve des lignes inet6
+pi@srv-rpi3:~ $ ip a s | grep inet6
+    inet6 ::1/128 scope host
+    inet6 fe80::825a:2174:8fcf:8143/64 scope link
+pi@srv-rpi3:~ $
+
+
+Pour ne plus avoir ipV6 actif sur votre RaspBerry, il faut mettre en place un 
+fichier qui se nomme disableipv6.conf et qui se trouve dans le repertoire /etc/sysctl.d
+
+Création du fichier
+sudo nano /etc/sysctl.d/disableipv6.conf
+
+Copier/coller les lignes ci-desous
+
+# désactivation de ipv6 pour toutes les interfaces
+net.ipv6.conf.all.disable_ipv6=1
+
+# désactivation de l’auto configuration pour toutes les interfaces
+net.ipv6.conf.all.autoconf=0
+
+# désactivation de ipv6 pour les nouvelles interfaces (ex:si ajout de carte réseau)
+net.ipv6.conf.default.disable_ipv6=1
+
+# désactivation de l’auto configuration pour les nouvelles interfaces
+net.ipv6.conf.default.autoconf=0
+
+
+Un reboot pour effectuer la prise en compte
+
+Vérification suite au reboot
+pi@srv-rpi3:~ $ ip a s | grep inet6
+pi@srv-rpi3:~ $
+
+plus de lignes inet6
+
+Vous pouvez regarder la liste des ports ouverts
+sudo ss -ant
+
+
+
+
