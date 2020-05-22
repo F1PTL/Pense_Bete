@@ -1,0 +1,26 @@
+Mise à jour firmware Zum AMBE Server (Version 1.3)
+
+Connecter votre Zum AMBE server a votre PC Windows par un cable USB
+Au niveau de votre gestionnaire de periphériques reperer le com port utiliser lors de la connexion.
+Exemple : com21
+
+Telecharger la version derniere version du firmware et executer l'extraction du fichier zip dans votre repertoire de travail.
+Exemple : zumambev1.3.zip
+
+Ouvrir une fenetre terminal pour taper des commandes (Mode Admin)
+
+Se postionner dans le repertoire de travail
+F:\Travail
+
+On retrouve dans cette exemple 2 fichiers
+esptool.exe
+zumambev1.3.bin
+
+F:\Travail> esptool.exe --chip esp32 --port COM21 --baud 921000 write_flash 0 zumambev1.3.bin
+
+Cette commande permet la mise a jour du firmware en version 1.3 de votre ZumAMBE Server.
+
+reboot pour controler la prise en compte.
+
+
+ 
