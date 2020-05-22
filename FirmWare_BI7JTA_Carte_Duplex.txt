@@ -1,0 +1,16 @@
+Mise à jour firmware (MMDVM_HS : 1.5.1b) de la carte Duplex de BI7JTA-VR2VYE
+Site ou se trouve les releases : https://github.com/VR2VYE/MMDVM_HS_firmware/releases
+
+Passage en mode expert au niveau de la Pi-Star
+rpi-rw
+rm mmdvm_duplex_fw.bin
+sudo pistar-watchdog.service stop
+sudo systemctl stop mmdvmhost.timer
+sudo systemctl stop mmdvmhost.service
+wget https://github.com/VR2VYE/MMDVM_HS_firmware/releases/download/v1.5.1/mmdvm_duplex_fw.bin
+sudo pistar-mmdvmhshatflash-custom mmdvm_duplex_fw.bin
+
+Attendre le 100%
+Reboot du Raspberry Pi
+
+Vérification de la version du firmware.
