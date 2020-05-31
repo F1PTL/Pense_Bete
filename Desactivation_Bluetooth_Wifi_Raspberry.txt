@@ -1,0 +1,17 @@
+Désactiver bluetooth et wifi sur son raspberry
+==============================================
+
+# Désactiver le wifi
+echo "dtoverlay=disable-wifi" | sudo tee -a /boot/config.txt
+
+# Désactiver le bluetooth
+echo "dtoverlay=disable-bt" | sudo tee -a /boot/config.txt
+sudo systemctl disable hciuart
+
+
+# Verification 
+systemctl status bluetooth
+# doit renvoyer « inactive »
+
+ip a
+# doit renvoyer uniquement les interfaces « lo » et « eth0 »
