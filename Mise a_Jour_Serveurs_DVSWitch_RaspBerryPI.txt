@@ -1,0 +1,7 @@
+Mise a jour crontab des serveurs DVSWitch RaspBerry PI
+======================================================
+sudo crontab -e
+# Ajout pour les serveurs DVSWitch
+05 5 * * * /home/pi/HostFilesUpdate-F1PTL.sh
+10 5 * * * tar -zcf /var/backups/opt.tgz /opt/
+10 23 * * 1-5 find /ramdisk/ -type f -mtime +10 -exec rm {} \;
