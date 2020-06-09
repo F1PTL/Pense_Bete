@@ -14,9 +14,13 @@ dapnet_pass = "xxxxxxxxxxxxxxxxxxxxx"
 dapnet_txgroup = "f-all"
 dapnet_emergency = "false"
 
-Lancement d'un message en ligne de commande
--------------------------------------------
+Lancement d'un message Send
+---------------------------
 ./dapnet_send.py f1xxx "Message test de F1XXX"
+
+Lancement d'un message Rubric
+-----------------------------
+./dapnet_rubric_send.py ysf-news "Test Rubric YSF-France"
 
 
 
