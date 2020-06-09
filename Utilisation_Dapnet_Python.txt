@@ -7,8 +7,8 @@ sudo apt-get install python-requests
 cd /opt
 git clone https://github.com/jdenoy/dapnet_send.git
 
-Modification des scripts dapnet_send.py
----------------------------------------
+Modification du script dapnet_send.py
+-------------------------------------
 dapnet_user = "f1xxx"
 dapnet_pass = "xxxxxxxxxxxxxxxxxxxxx"
 dapnet_txgroup = "f-all"
@@ -17,6 +17,12 @@ dapnet_emergency = "false"
 Lancement d'un message Send
 ---------------------------
 ./dapnet_send.py f1xxx "Message test de F1XXX"
+
+
+Modification du script dapnet_rubric.py
+---------------------------------------
+dapnet_user = "f1xxx"
+dapnet_pass = "xxxxxxxxxxxxxxxxxxxxx"
 
 Lancement d'un message Rubric
 -----------------------------
