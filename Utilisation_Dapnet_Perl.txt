@@ -1,0 +1,22 @@
+Installation DAPNET Linux
+=========================
+
+sudo apt-get update
+sudo apt-get install python-requests
+
+cd /opt
+git clone https://github.com/jdenoy/dapnet_send.git
+
+Modification des scripts dapnet_send.py
+---------------------------------------
+dapnet_user = "f1xxx"
+dapnet_pass = "xxxxxxxxxxxxxxxxxxxxx"
+dapnet_txgroup = "f-all"
+dapnet_emergency = "false"
+
+Lancement d'un message en ligne de commande
+-------------------------------------------
+./dapnet_send.py f1xxx "Message test de F1XXX"
+
+
+
