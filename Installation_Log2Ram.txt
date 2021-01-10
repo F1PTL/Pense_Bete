@@ -1,0 +1,37 @@
+# Protégez vos cartes SD avec Log2Ram
+# ===================================
+
+# Sur RPi, je vous conseille aussi d’installer Log2Ram pour limiter les accès en écriture sur votre carte SD
+# et ainsi prolonger sa vie
+
+# Login pi
+
+# Repertoire de depot
+cd /home/pi
+
+# Recuperation du package GitHub
+git clone https://github.com/azlux/log2ram.git
+
+# Modification des droits du scripts
+cd log2ram
+chmod +x install.sh
+
+# Installation du package
+sudo ./install.sh
+
+# Modification du fichier de configuration
+sudo nano /etc/log2ram.conf
+
+# Modification de la taille SIZE=128M
+
+# Redemarrage
+sudo reboot
+
+# Verification du fs /var/log
+df -h
+==> A verifier : log2ram            128M    7,5M  121M   6% /var/log
+
+mount
+==> A verifier : log2ram on /var/log type tmpfs (rw,nosuid,nodev,noexec,noatime,size=131072k,mode=755)
+
+

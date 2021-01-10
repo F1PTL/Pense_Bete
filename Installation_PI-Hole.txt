@@ -1,0 +1,22 @@
+# Installation d'un serveur PI-Hole sur Raspberry
+# ===============================================
+# Bloquer les publicités sur tout votre réseau (PC / Smartphone / TV...)
+
+# Login pi
+
+# "Voici le site de Pi-Hole: https://pi-hole.net/
+
+# Installation
+sudo apt install git
+git clone --depth 1 https://github.com/pi-hole/pi-hole.git Pi-hole
+
+# deplacement dans le repertoire
+cd "Pi-hole/automated install/"
+
+# Lancement installation
+sudo ./basic-install.sh
+
+# Repondre aux questions
+
+
+
