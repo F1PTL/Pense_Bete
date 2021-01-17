@@ -9,6 +9,14 @@
 # Repertoire de depot
 cd /home/pi
 
+# Installation ZRAM
+# Installation de zram (compresse la ram pour l'agrandir et donc permet d'éviter le swap)
+
+sudo apt install zram-tools
+
+
+# Installation de log2ram, qui met les fichiers log en ram et ne les écrit qu'une fois par jour
+
 # Recuperation du package GitHub
 git clone https://github.com/azlux/log2ram.git
 
@@ -24,14 +32,15 @@ sudo nano /etc/log2ram.conf
 
 # Modification de la taille SIZE=128M
 
+# Pour activer l'utilisation de Zram avec log2ram il faut penser à éditer le fichier /etc/log2ram.conf
+# mettre la variable 'ZL2R' à true
+
 # Redemarrage
 sudo reboot
 
 # Verification du fs /var/log
 df -h
-==> A verifier : log2ram            128M    7,5M  121M   6% /var/log
+==> A verifier : /dev/zram0          93M     41M   46M  48% /var/log
 
 mount
-==> A verifier : log2ram on /var/log type tmpfs (rw,nosuid,nodev,noexec,noatime,size=131072k,mode=755)
-
-
+==> A verifier : /dev/zram0 on /var/log type ext4 (rw,nosuid,nodev,noexec,noatime,user=log2ram)
