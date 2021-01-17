@@ -1,5 +1,5 @@
-# Protégez vos cartes SD avec Log2Ram
-# ===================================
+# Protégez vos cartes SD avec Log2Ram et zram-tools
+# =================================================
 
 # Sur RPi, je vous conseille aussi d’installer Log2Ram pour limiter les accès en écriture sur votre carte SD
 # et ainsi prolonger sa vie
