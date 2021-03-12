@@ -1,0 +1,82 @@
+#Clonage de la carte SD du RaspBerry Pi avec des tailles de cartes differentes
+#=============================================================================#
+# Site : http://www.fdgeek.net/sauvegarder-et-pr%C3%A9server-la-carte-microsd-du-raspberry-pi
+#============================================================================================#
+Login : pi
+Mote de passe : *********
+
+
+# On recupere d abbord le script a partir de git
+#===============================================#
+sudo git clone https://github.com/billw2/rpi-clone.git
+
+
+# Puis on le copie vers le repertoire /sbin de l utilisateur
+#===========================================================#
+cd rpi-clone
+sudo cp rpi-clone rpi-clone-setup /usr/local/sbin
+
+
+# On positionne la nouvelle carte Micro SD sur le Raspberry Pi
+# au niveau d'un port USB
+#=============================================================#
+
+
+# On stop tous les services sur le Raspberry Pi
+#==============================================#
+sudo systemctl stop xxxxxxxxx.services
+sudo systemctl stop xxxxxxxxx.services
+#...
+
+
+# Verifiez que le support de sauvegarde est detecte. Il doit apparaître 
+# sous la forme d un disque sda. Exemple : Disk /dev/sda: 14.9 GiB
+# La carte principale micro SD du Raspberry Pi apparaissant sous la 
+# forme /dev/mmcblk0. Exemple : Disk /dev/mmcblk0: 7.5 GiB
+# Utilser la commande ci-dessous
+#======================================================================#
+sudo fdisk -l
+
+
+# Premiere execution de la commande RPI-Clone
+# sda = correspond a la carte MicroSD port USB
+# -f = correspond a l'initialisation de cette carte
+# -v = verbose (liste des fichiers sauvegardes)
+#============================================#
+sudo rpi-clone sda -f -v
+
+
+# Le script va vous demander de repondre aux questions (Y/N) 
+# Patienter jusqu a ce que le clonage de la carte systeme soit termine
+# le script vous propose de quitter en démontant le support de sauvegarde
+
+Booted disk: mmcblk0 8.0GB                 Destination disk: sda 15.9GB
+---------------------------------------------------------------------------
+Part      Size    FS     Label           Part   Size    FS     Label
+1 /boot   256.0M  fat32  --              1      256.0M  fat32  --
+2 root      7.2G  ext4   --              2       14.6G  ext4   rootfs
+---------------------------------------------------------------------------
+== Initialize: IMAGE partition table - forced by option ==
+1 /boot               (47.5M used)   : MKFS  SYNC to sda1
+2 root                (3.7G used)    : RESIZE  MKFS  SYNC to sda2
+---------------------------------------------------------------------------
+Run setup script       : no.
+Verbose mode           : yes.
+-----------------------:
+** WARNING **          : All destination disk sda data will be overwritten!
+-----------------------:
+
+Initialize and clone to the destination disk sda?  (yes/no): yes
+
+
+# Il n est plus nécessaire de positionner le paramètre -f pour sauvegarder votre système
+# La simple commande rpi-clone sda -v suffit
+# Mise à jour de la 1ere sauvegarde
+#=======================================================================================#
+sudo rpi-clone sda -v
+
+
+# FIN
+#====#
+
+
