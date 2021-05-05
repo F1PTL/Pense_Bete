@@ -1,0 +1,85 @@
+Installation Allmon2 Dashboard pour les Nodes ASL
+#################################################
+
+sudo apt install git
+sudo git clone https://github.com/AllStarLink/AllMon2.git /var/www/html/allmon2
+
+cd /var/www/html/allmon2
+sudo mv allmon.ini.txt allmon.ini.php
+sudo mv controlpanel.ini.txt controlpanel.ini.php
+
+Modification du fichier allmon.ini.php
+======================================
+cd /var/www/html/allmon2
+
+nano allmon2.ini.php
+<?php
+[Off-site Link]
+url=http://allstarlink.org
+
+[51XXX]
+host=127.0.0.1:5038
+user=admin
+passwd=<mot de passe admin du fichier manager.conf dans /etc/asterisk>  
+menu=yes
+hideNodeURL=yes
+
+?>
+
+Securite acces au dashboard Allmon2
+===================================
+cd /var/www/html/allmon2
+htpasswd -cB .htpasswd admin <Enter>
+<taper le password admin du fichier manager.conf dans /etc/asterisk>
+
+Modification des droits du fichier
+chmod 755 astdb.php
+
+Lancement de la commande astb.php (Mise a jour de la base des nodes ASL)
+=================================
+cd /var/www/html/allmon2
+./astdb.php
+Success: astdb.txt 683672 bytes
+
+Ajout dans la crontab de la commande astb.php
+=============================================
+30 7,12,16,20,23 * * * cd /var/www/html/allmon2; ./astdb.php
+
+Verification URL Allmon2
+========================
+http://<@IIP du RPI>/allmon2
+
+
+Si vous utilisez le logiciel lightttpd il faut modifier le fichier de configuration
+===================================================================================
+Ajouter cette ligne dans votre fichier : server.stream-response-body = 2
+
+cd /etc/lighttpd
+nano lighttpd.conf
+.....
+server.document-root        = "/var/www/html"
+server.upload-dirs          = ( "/var/cache/lighttpd/uploads" )
+server.errorlog             = "/var/log/lighttpd/error.log"
+server.pid-file             = "/var/run/lighttpd.pid"
+server.username             = "www-data"
+server.groupname            = "www-data"
+server.port                 = 80
+
+server.stream-response-body = 2
+
+index-file.names            = ( "index.php", "index.html", "index.lighttpd.html" )
+.....
+
+
+
+
+
+
+
+
+
+
+
+
+
+
