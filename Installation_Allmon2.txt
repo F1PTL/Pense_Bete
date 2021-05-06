@@ -22,7 +22,7 @@ host=127.0.0.1:5038
 user=admin
 passwd=<mot de passe admin du fichier manager.conf dans /etc/asterisk>  
 menu=yes
-hideNodeURL=yes
+hideNodeURL=no
 
 ?>
 
