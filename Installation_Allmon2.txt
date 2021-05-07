@@ -12,7 +12,7 @@ Modification du fichier allmon.ini.php
 ======================================
 cd /var/www/html/allmon2
 
-nano allmon2.ini.php
+nano allmon.ini.php
 <?php
 [Off-site Link]
 url=http://allstarlink.org
