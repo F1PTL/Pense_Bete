@@ -12,35 +12,27 @@
 # ===================================================== #
 # Version 1.1                                           #
 # 11/05/2018  Modification F1PTL pour des besoins perso #
-# ======================================================#
-# Version 1.2                                           #
-# 09/01/2019  Modification F1PTL pour le fichier        #
-# NXDN.csv avec NXDN.csv-F1PT                           #
-# ======================================================#
-# Version 1.3						#
-# 17/12/2019 Mise en place de la Variable		#
-# REP_HOME="/home/teambvc/ref"                          #
+#                                                       #
 #########################################################
 # Check that the network is UP and die if its not
 if [ "$(expr length `hostname -I | cut -d' ' -f1`x)" == "1" ]; then
 	exit 0
 fi
 
-REP_HOME="/home/teambvc/ref"
-
-APRSHOSTS=${REP_HOME}/APRSHosts.txt
-DCSHOSTS=${REP_HOME}/DCS_Hosts.txt
-DExtraHOSTS=${REP_HOME}/DExtra_Hosts.txt
-DMRIDFILE=${REP_HOME}/DMRIds.dat
-DMRHOSTS=${REP_HOME}/DMR_Hosts.txt
-DPlusHOSTS=${REP_HOME}/DPlus_Hosts.txt
-P25HOSTS=${REP_HOME}/P25Hosts.txt
-YSFHOSTS=${REP_HOME}/YSFHosts.txt
-FCSHOSTS=${REP_HOME}/FCSHosts.txt
-XLXHOSTS=${REP_HOME}/XLXHosts.txt
-NXDNIDFILE=${REP_HOME}/NXDN.csv
-NXDNHOSTS=${REP_HOME}/NXDNHosts.txt
-TGLISTBM=${REP_HOME}/TGList_BM.txt
+mkdir -p /home/pi/ref
+APRSHOSTS=/home/pi/ref/APRSHosts.txt
+DCSHOSTS=/home/pi/ref/DCS_Hosts.txt
+DExtraHOSTS=/home/pi/ref/DExtra_Hosts.txt
+DMRIDFILE=/home/pi/ref/DMRIds.dat
+DMRHOSTS=/home/pi/ref/DMR_Hosts.txt
+DPlusHOSTS=/home/pi/ref/DPlus_Hosts.txt
+P25HOSTS=/home/pi/ref/P25Hosts.txt
+YSFHOSTS=/home/pi/ref/YSFHosts.txt
+FCSHOSTS=/home/pi/ref/FCSHosts.txt
+XLXHOSTS=/home/pi/ref/XLXHosts.txt
+NXDNIDFILE=/home/pi/ref/NXDN.csv
+NXDNHOSTS=/home/pi/ref/NXDNHosts.txt
+TGLISTBM=/home/pi/ref/TGList_BM.txt
 
 # How many backups
 FILEBACKUP=1
@@ -119,16 +111,23 @@ curl --fail -o ${NXDNHOSTS}-TMP -s http://www.pistar.uk/downloads/NXDN_Hosts.txt
 curl --fail -o ${TGLISTBM} -s http://www.pistar.uk/downloads/TGList_BM.txt
 
 # If there is a DMR Over-ride file, add it's contents to DMR_Hosts.txt
-if [ -f "/root/DMR_Hosts.txt" ]; then
-	cat /root/DMR_Hosts.txt >> ${DMRHOSTS}
+if [ -f "/root/DMR_Priv_Hosts.txt" ]; then
+	cat /root/DMR_Priv_Hosts.txt >> ${DMRHOSTS}
 fi
+# ID-DMR Private
+if [ -f "/root/ID_DMR_Priv.txt" ]; then
+	cat /root/ID_DMR_Priv.txt >> ${DMRIDFILE}
+fi
+
 # Add custom DMRIDFILE
-cp ${DMRIDFILE} /root/DMRIds.dat
+cp ${DMRIDFILE} /home/pi/DMRIds.dat
 
 
 # Add custom YSFHosts FR
 if [ -f ${YSFHOSTS}-TMP ]; then
-        cat ${YSFHOSTS}-TMP | grep 'FR ' > ${YSFHOSTS}
+        cat ${YSFHOSTS}-TMP | grep 'FR-' > ${YSFHOSTS}
+        cat ${YSFHOSTS}-TMP | grep '127.0.0.1' >> ${YSFHOSTS}
+		echo "61210;BE-YSF-TEST;Belgique-Tests;serveur.on4rd.be;53004;001;http://ysfdashon4rd.ddns.net" >> ${YSFHOSTS}
 fi
 
 # Add custom FCSHOSTS FR
@@ -140,12 +139,6 @@ fi
 if [ -f ${NXDNHOSTS}-TMP ]; then
 	cat ${NXDNHOSTS}-TMP > ${NXDNHOSTS}
 fi
-
-# Add custom NXDN ID FILES
-if [ -f ${NXDNIDFILE} ]; then
-	cat ${NXDNIDFILE}-F1PTL >> ${NXDNIDFILE}
-fi
-
 
 # If there is an XLX over-ride
 if [ -f "/root/XLXHosts.txt" ]; then
