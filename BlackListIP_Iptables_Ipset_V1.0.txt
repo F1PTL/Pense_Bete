@@ -1,0 +1,149 @@
+Creation d'une blacklist IP pour un serveur Linux Debian
+========================================================
+
+login root (Administrateur)
+
+
+apt install iptables -y
+apt install ipset -y
+apt install iptables-persistent -y
+
+ipset create blacklistv4 hash:ip family inet maxelem 1000000
+ipset create blacklistv6 hash:ip family inet6 maxelem 1000000
+
+iptables -I INPUT 1 -m set --match-set blacklistv4 src -j DROP
+ip6tables -I INPUT 1 -m set --match-set blacklistv6 src -j DROP
+
+
+Pour lister les adresses IP présentes dans votre blacklistv4
+------------------------------------------------------------
+ipset list blacklistv4
+
+
+Pour ajouter une adresse IP dans votre blacklistv4 (Adresse IPV4 : 192.168.1.200)
+--------------------------------------------------
+ipset add blacklistv4 <adresse_IP>
+
+
+Pour supprimer une adresse IP dans votre blacklistv4
+----------------------------------------------------
+ipset del blacklistv4 <adresse_IP>
+
+
+Pour supprimer toutes les adresses IP dans votre blacklistV4
+------------------------------------------------------------
+ipset flush blacklistv4
+
+
+Sauvegarde de la blacklistv4
+----------------------------
+ipset save blacklistv4 -f /var/backups/ipset-blacklistv4.backup
+
+
+Restauration de la blacklistv4
+------------------------------
+ipset restore -! < /var/backups/ipset-blacklistv4.backup
+
+============================================================
+
+Pour lister les adresses IP présentes dans votre blacklistv6
+------------------------------------------------------------
+ipset list blacklistv6
+
+
+Pour ajouter une adresse IP dans votre blacklistv6 (Adresse IPV6 : 2001:0db8:0000:85a3:0000:0000:ac1f:8001)
+--------------------------------------------------
+ipset add blacklistv6 <adresse_IP>
+
+
+Pour supprimer une adresse IP dans votre blacklistv6
+----------------------------------------------------
+ipset del blacklistv6 <adresse_IP>
+
+
+Pour supprimer toutes les adresses IP dans votre blacklistV6
+------------------------------------------------------------
+ipset flush blacklistv6
+
+
+Sauvegarde de la blacklistv6
+----------------------------
+ipset save blacklistv6 -f /var/backups/ipset-blacklistv6.backup
+
+
+Restauration de la blacklistv6
+------------------------------
+ipset restore -! < /var/backups/ipset-blacklistv6.backup
+
+============================================================
+
+Creation du service save-ipset-rulesv4.service
+----------------------------------------------
+cd /lib/systemd/system
+
+nano save-ipset-rulesv4.service
+
+[Unit]
+Description=ipset restauration blacklistv4
+Before=netfilter-persistent.service
+ConditionFileNotEmpty=/var/backups/ipset-blacklistv4.backup
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/ipset -exist -file /var/backups/ipset-blacklistv4.backup restore
+ExecStart=/sbin/iptables -I INPUT 1 -m set --match-set blacklistv4 src -j DROP
+ExecStop=/sbin/ipset save blacklistv4 -f /var/backups/ipset-blacklistv4.backup
+
+[Install]
+WantedBy=multi-user.target
+
+
+Gestion des services Linux
+--------------------------
+systemectl enable save-ipset-rulesv4.service
+
+systemectl start save-ipset-rulesv4.service
+
+systemectl status save-ipset-rulesv4.service
+
+systemectl stop save-ipset-rulesv4.service
+
+===========================================================
+
+Creation du service save-ipset-rulesv6.service
+----------------------------------------------
+cd /lib/systemd/system
+
+nano save-ipset-rulesv6.service
+
+[Unit]
+Description=ipset restauration blacklistv6
+Before=netfilter-persistent.service
+ConditionFileNotEmpty=/var/backups/ipset-blacklistv6.backup
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/ipset -exist -file /var/backups/ipset-blacklistv6.backup restore
+ExecStart=/sbin/ip6tables -I INPUT 1 -m set --match-set blacklistv6 src -j DROP
+ExecStop=/sbin/ipset save blacklistv6 -f /var/backups/ipset-blacklistv6.backup
+
+[Install]
+WantedBy=multi-user.target
+
+
+Gestion des services Linux
+--------------------------
+systemectl enable save-ipset-rulesv6.service
+
+systemectl start save-ipset-rulesv6.service
+
+systemectl status save-ipset-rulesv6.service
+
+systemectl stop save-ipset-rulesv6.service
+
+
+73's a tous
+
+F1PTL Bruno
