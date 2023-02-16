@@ -1,0 +1,80 @@
+Installation STFU BM2082 sur un VPS
+===================================
+
+sudo apt update
+sudo apt upgrade
+sudo apt install stfu
+
+L'installation est faite dans le repertoire /opt
+root@vmi973606:/opt/STFU# ls -l
+total 432
+-rwxr-xr-x 1 root root 437088 May 28  2021 STFU
+-rw-r--r-- 1 root root    917 Feb 16 11:33 STFU.ini
+root@vmi973606:/opt/STFU#
+
+
+Il faut créer un fichier STFU.ini dans le repertoire /opt/STFU qui contient :
+; Configure the BrandMeister connection
+; Simple Terminal Feature Update
+; Audio format is AMBE 72 bit
+[STFU]                          ; Brandmeister Open DMR Terminal (ODMRT) Protocol
+BMAddress = 217.182.129.131     ; Brandmeister ODMRT server address BM2082
+BMPort = 54006                  ; Brandmeister ODMRT port BM2082
+BMPassword = xxxxxxx            ; Your Brandmeister password
+Address = 127.0.0.1             ; Address to send AMBE TLV frames to (export)
+txPort  = 36100                 ; Port to send AMBE TLV frames to (export)
+rxPort  = 36103                 ; Port to listen on (import)
+UserID  = 2080023               ; Your DMR ID sans les extensions
+TalkerAlias = Indicatif + Prenom; Max 27 characters
+StartTG = 208                   ; Startup talk group BM
+LogLevel = 3                    ; STFU log level (0=No logging, 1=Debug, 2=Message, 3=Info, 4=Warning, 5=Error)
+
+
+
+Il faut aussi créer un fichier service pour avoir un demarrage automatique du STFU
+cd /lib/systemd/system
+vi stfu.service
+
+[Unit]
+Description=STFU Service
+# Description=Place this file in /lib/systemd/system
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=3
+Restart=on-abort
+StandardOutput=null
+WorkingDirectory=/opt/STFU
+Environnement = STFU_LOG =/var/log
+Environment=DVSWITCH=DVSwitch.ini
+ExecStartPre = /bin/sh -c 'echo "Starting STFU: [`date +%%T.%%3N`]" >> /var/log/netcheck'
+ExecStart=/opt/STFU/STFU /opt/STFU/STFU.ini
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+Lancement et arret du service STFU
+root@vmi973606:/lib/systemd/system# systemctl start stfu.service
+
+root@vmi973606:/lib/systemd/system# systemctl status stfu.service
+● stfu.service - STFU Service
+     Loaded: loaded (/lib/systemd/system/stfu.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2023-02-16 13:01:35 CET; 4s ago
+    Process: 40704 ExecStartPre=/bin/sh -c echo "Starting STFU: [`date +%T.%3N`]" >> /var/log/netcheck (code=exited, status=0/SUCCESS)
+   Main PID: 40706 (STFU)
+      Tasks: 3 (limit: 9507)
+     Memory: 380.0K
+        CPU: 6ms
+     CGroup: /system.slice/stfu.service
+             └─40706 /opt/STFU/STFU /opt/STFU/STFU.ini
+
+Feb 16 13:01:35 vmi973606 systemd[1]: Starting STFU Service...
+Feb 16 13:01:35 vmi973606 systemd[1]: Started STFU Service.
+
+root@vmi973606:/lib/systemd/system# systemctl stop stfu.service
+
